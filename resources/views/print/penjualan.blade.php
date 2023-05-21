@@ -65,7 +65,7 @@
             <th>No</th>
             <th>Tanggal</th>
             <th>No Transaksi</th>
-            <th>Retail</th>
+            <th>KUstomer</th>
             <th>Barang Yg Di Jual</th>
             <th>Total</th>
           </tr>
