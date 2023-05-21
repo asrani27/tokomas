@@ -48,7 +48,7 @@
       <div class="col-sm-4 invoice-col">
         <br><br><br>
         <address>
-            <h3><strong>LAPORAN BARANG MASUK</strong></h3>
+            <h3><strong>LAPORAN PEMBELIAN</strong></h3>
             
         </address>
       </div>

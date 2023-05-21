@@ -49,7 +49,7 @@
       <div class="col-sm-4 invoice-col">
         <br><br><br>
         <address>
-            <h3><strong>LAPORAN DISTRIBUSI</strong></h3>
+            <h3><strong>LAPORAN PENJUALAN</strong></h3>
             
         </address>
       </div>
