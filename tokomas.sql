@@ -5,13 +5,13 @@
  Source Server Type    : MySQL
  Source Server Version : 50734 (5.7.34)
  Source Host           : localhost:3306
- Source Schema         : _agus
+ Source Schema         : tokomas
 
  Target Server Type    : MySQL
  Target Server Version : 50734 (5.7.34)
  File Encoding         : 65001
 
- Date: 18/10/2022 08:28:52
+ Date: 07/06/2023 13:31:56
 */
 
 SET NAMES utf8mb4;
@@ -25,21 +25,26 @@ CREATE TABLE `barang` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `kode` varchar(255) DEFAULT NULL,
   `nama` varchar(255) DEFAULT NULL,
-  `satuan_id` int(11) DEFAULT NULL,
-  `kategori_id` int(11) DEFAULT NULL,
+  `satuan_id` int(11) unsigned DEFAULT NULL,
+  `kategori_id` int(11) unsigned DEFAULT NULL,
   `harga_beli` int(11) DEFAULT NULL,
   `harga_jual` int(11) DEFAULT NULL,
   `stok` int(11) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`),
+  KEY `satuan_id_barang` (`satuan_id`),
+  KEY `kategori_id_barang` (`kategori_id`),
+  CONSTRAINT `kategori_id_barang` FOREIGN KEY (`kategori_id`) REFERENCES `kategori` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `satuan_id_barang` FOREIGN KEY (`satuan_id`) REFERENCES `satuan` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of barang
 -- ----------------------------
 BEGIN;
-INSERT INTO `barang` (`id`, `kode`, `nama`, `satuan_id`, `kategori_id`, `harga_beli`, `harga_jual`, `stok`, `created_at`, `updated_at`) VALUES (1, 'RB0001', 'Indomie Goreng', 1, 1, 3000, 4400, 29, '2022-10-17 14:00:00', '2022-10-17 14:57:41');
+INSERT INTO `barang` (`id`, `kode`, `nama`, `satuan_id`, `kategori_id`, `harga_beli`, `harga_jual`, `stok`, `created_at`, `updated_at`) VALUES (2, 'RB0001', 'Cincin Motif Bunga 5g', 1, 2, 4000000, 5000000, 26, '2023-05-19 17:30:46', '2023-05-19 17:49:19');
+INSERT INTO `barang` (`id`, `kode`, `nama`, `satuan_id`, `kategori_id`, `harga_beli`, `harga_jual`, `stok`, `created_at`, `updated_at`) VALUES (3, 'RB0002', 'Gelang 10g Motif Bintang', 1, 1, 9000000, 10000000, 13, '2023-05-19 17:31:10', '2023-05-19 17:48:04');
 COMMIT;
 
 -- ----------------------------
@@ -56,10 +61,10 @@ CREATE TABLE `kategori` (
 -- Records of kategori
 -- ----------------------------
 BEGIN;
-INSERT INTO `kategori` (`id`, `nama`) VALUES (1, 'Makanan');
-INSERT INTO `kategori` (`id`, `nama`) VALUES (2, 'Pecah Belah');
-INSERT INTO `kategori` (`id`, `nama`) VALUES (3, 'Kosmetik');
-INSERT INTO `kategori` (`id`, `nama`) VALUES (4, 'Mebel');
+INSERT INTO `kategori` (`id`, `nama`) VALUES (1, 'Gelang');
+INSERT INTO `kategori` (`id`, `nama`) VALUES (2, 'Cincin');
+INSERT INTO `kategori` (`id`, `nama`) VALUES (3, 'Kalung');
+INSERT INTO `kategori` (`id`, `nama`) VALUES (4, 'Batang');
 COMMIT;
 
 -- ----------------------------
@@ -74,7 +79,7 @@ CREATE TABLE `keranjang_belanja` (
   `jumlah` int(11) DEFAULT NULL,
   `total` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of keranjang_belanja
@@ -89,18 +94,21 @@ DROP TABLE IF EXISTS `pembelian`;
 CREATE TABLE `pembelian` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `total` int(11) DEFAULT NULL,
-  `supplier_id` int(11) DEFAULT NULL,
+  `supplier_id` int(11) unsigned DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `no_transaksi` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`),
+  KEY `supplier_id_pembelian` (`supplier_id`),
+  CONSTRAINT `supplier_id_pembelian` FOREIGN KEY (`supplier_id`) REFERENCES `supplier` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of pembelian
 -- ----------------------------
 BEGIN;
-INSERT INTO `pembelian` (`id`, `total`, `supplier_id`, `created_at`, `updated_at`, `no_transaksi`) VALUES (5, 136400, 1, '2022-10-17 14:42:14', '2022-10-17 14:43:19', 'TRSPB-0001');
+INSERT INTO `pembelian` (`id`, `total`, `supplier_id`, `created_at`, `updated_at`, `no_transaksi`) VALUES (6, 25000000, 1, '2023-05-19 17:44:44', '2023-05-19 17:44:50', 'TRSPB-0001');
+INSERT INTO `pembelian` (`id`, `total`, `supplier_id`, `created_at`, `updated_at`, `no_transaksi`) VALUES (7, 95000000, 1, '2023-05-19 17:49:15', '2023-05-19 17:49:19', 'TRSPB-0002');
 COMMIT;
 
 -- ----------------------------
@@ -109,19 +117,22 @@ COMMIT;
 DROP TABLE IF EXISTS `pembelian_detail`;
 CREATE TABLE `pembelian_detail` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `pembelian_id` int(11) DEFAULT NULL,
-  `barang_id` int(11) DEFAULT NULL,
+  `pembelian_id` int(11) unsigned DEFAULT NULL,
+  `barang_id` int(11) unsigned DEFAULT NULL,
   `harga` int(11) DEFAULT NULL,
   `jumlah` int(11) DEFAULT NULL,
   `subtotal` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of pembelian_detail
 -- ----------------------------
 BEGIN;
 INSERT INTO `pembelian_detail` (`id`, `pembelian_id`, `barang_id`, `harga`, `jumlah`, `subtotal`) VALUES (2, 5, 1, 4400, 31, 136400);
+INSERT INTO `pembelian_detail` (`id`, `pembelian_id`, `barang_id`, `harga`, `jumlah`, `subtotal`) VALUES (3, 6, 2, 5000000, 1, 5000000);
+INSERT INTO `pembelian_detail` (`id`, `pembelian_id`, `barang_id`, `harga`, `jumlah`, `subtotal`) VALUES (4, 6, 3, 10000000, 2, 20000000);
+INSERT INTO `pembelian_detail` (`id`, `pembelian_id`, `barang_id`, `harga`, `jumlah`, `subtotal`) VALUES (5, 7, 2, 5000000, 19, 95000000);
 COMMIT;
 
 -- ----------------------------
@@ -131,18 +142,22 @@ DROP TABLE IF EXISTS `penjualan`;
 CREATE TABLE `penjualan` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `total` int(11) DEFAULT NULL,
-  `retail_id` int(11) DEFAULT NULL,
+  `retail_id` int(11) unsigned DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `no_transaksi` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`),
+  KEY `retail_id_penjualan` (`retail_id`),
+  CONSTRAINT `retail_id_penjualan` FOREIGN KEY (`retail_id`) REFERENCES `retail` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of penjualan
 -- ----------------------------
 BEGIN;
-INSERT INTO `penjualan` (`id`, `total`, `retail_id`, `created_at`, `updated_at`, `no_transaksi`) VALUES (2, 8800, 2, '2022-10-17 14:24:04', '2022-10-17 14:24:07', 'TRSPJ-0001');
+INSERT INTO `penjualan` (`id`, `total`, `retail_id`, `created_at`, `updated_at`, `no_transaksi`) VALUES (3, 5000000, 4, '2023-05-19 17:45:42', '2023-05-19 17:45:45', 'TRSPJ-0001');
+INSERT INTO `penjualan` (`id`, `total`, `retail_id`, `created_at`, `updated_at`, `no_transaksi`) VALUES (4, 10000000, 5, '2023-05-19 17:46:27', '2023-05-19 17:46:29', 'TRSPJ-0002');
+INSERT INTO `penjualan` (`id`, `total`, `retail_id`, `created_at`, `updated_at`, `no_transaksi`) VALUES (5, 15000000, 5, '2023-05-19 17:48:01', '2023-05-19 17:48:04', 'TRSPJ-0003');
 COMMIT;
 
 -- ----------------------------
@@ -157,13 +172,17 @@ CREATE TABLE `penjualan_detail` (
   `jumlah` int(11) DEFAULT NULL,
   `subtotal` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of penjualan_detail
 -- ----------------------------
 BEGIN;
 INSERT INTO `penjualan_detail` (`id`, `penjualan_id`, `barang_id`, `harga`, `jumlah`, `subtotal`) VALUES (1, 2, 1, 4400, 2, 8800);
+INSERT INTO `penjualan_detail` (`id`, `penjualan_id`, `barang_id`, `harga`, `jumlah`, `subtotal`) VALUES (2, 3, 2, 5000000, 1, 5000000);
+INSERT INTO `penjualan_detail` (`id`, `penjualan_id`, `barang_id`, `harga`, `jumlah`, `subtotal`) VALUES (3, 4, 2, 5000000, 2, 10000000);
+INSERT INTO `penjualan_detail` (`id`, `penjualan_id`, `barang_id`, `harga`, `jumlah`, `subtotal`) VALUES (4, 5, 3, 10000000, 1, 10000000);
+INSERT INTO `penjualan_detail` (`id`, `penjualan_id`, `barang_id`, `harga`, `jumlah`, `subtotal`) VALUES (5, 5, 2, 5000000, 1, 5000000);
 COMMIT;
 
 -- ----------------------------
@@ -178,13 +197,14 @@ CREATE TABLE `retail` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of retail
 -- ----------------------------
 BEGIN;
-INSERT INTO `retail` (`id`, `nama`, `alamat`, `telp`, `created_at`, `updated_at`) VALUES (2, 'Retail 1', 'jl .sdfsdf', '098765789', '2022-10-17 14:08:28', '2022-10-17 14:08:28');
+INSERT INTO `retail` (`id`, `nama`, `alamat`, `telp`, `created_at`, `updated_at`) VALUES (4, 'Adi', 'jl pramuka k 6 gg teratai', '098765456789', '2023-05-19 17:32:18', '2023-05-19 17:32:18');
+INSERT INTO `retail` (`id`, `nama`, `alamat`, `telp`, `created_at`, `updated_at`) VALUES (5, 'Budi', 'Jl Sultan Adam', '0987654567890', '2023-05-19 17:32:26', '2023-05-19 17:32:26');
 COMMIT;
 
 -- ----------------------------
@@ -281,7 +301,7 @@ CREATE TABLE `sales` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `brand` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of sales
@@ -297,15 +317,13 @@ CREATE TABLE `satuan` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `nama` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of satuan
 -- ----------------------------
 BEGIN;
 INSERT INTO `satuan` (`id`, `nama`) VALUES (1, 'PCS');
-INSERT INTO `satuan` (`id`, `nama`) VALUES (2, 'Kotak');
-INSERT INTO `satuan` (`id`, `nama`) VALUES (3, 'Botol');
 COMMIT;
 
 -- ----------------------------
@@ -326,7 +344,7 @@ CREATE TABLE `supplier` (
 -- Records of supplier
 -- ----------------------------
 BEGIN;
-INSERT INTO `supplier` (`id`, `nama`, `alamat`, `telp`, `created_at`, `updated_at`) VALUES (1, 'PT Indofood', 'jl.....', '0987656789', '2022-10-17 14:03:39', '2022-10-17 14:03:39');
+INSERT INTO `supplier` (`id`, `nama`, `alamat`, `telp`, `created_at`, `updated_at`) VALUES (1, 'PT Antam', 'jl.....', '0987656789', '2022-10-17 14:03:39', '2023-05-19 17:31:23');
 COMMIT;
 
 -- ----------------------------
@@ -356,7 +374,7 @@ CREATE TABLE `users` (
 -- Records of users
 -- ----------------------------
 BEGIN;
-INSERT INTO `users` (`id`, `name`, `email`, `username`, `email_verified_at`, `password`, `password_superadmin`, `remember_token`, `created_at`, `updated_at`, `api_token`, `last_session`, `change_password`) VALUES (1, 'superadmin', NULL, 'superadmin', '2022-10-17 23:09:58', '$2y$10$3k7FLC2TkBzYnumOyiv7BOmTOsTzzJHb3/p4aKcBUoGonp4Jij0Wu', NULL, 'XkwHMsfMVuFqnPHHpkOmdXZqE9kSZL2N39dnzvy73LsvdDI24xzKzmrYjTmk', '2022-10-17 23:09:58', '2022-10-17 23:09:58', NULL, NULL, 0);
+INSERT INTO `users` (`id`, `name`, `email`, `username`, `email_verified_at`, `password`, `password_superadmin`, `remember_token`, `created_at`, `updated_at`, `api_token`, `last_session`, `change_password`) VALUES (1, 'superadmin', NULL, 'superadmin', '2023-05-20 02:01:48', '$2y$10$3k7FLC2TkBzYnumOyiv7BOmTOsTzzJHb3/p4aKcBUoGonp4Jij0Wu', NULL, 'hjigWN2PGuYaRY540P0DydOZ7Y9Z0Qo1568BvQ675UikHOY8PtutNq4eKKf6', '2023-05-20 02:01:48', '2023-05-20 02:01:48', NULL, NULL, 0);
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;
