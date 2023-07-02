@@ -90,7 +90,7 @@ class PembelianController extends Controller
     public function print($id)
     {
         $data = Pembelian::find($id);
-        return view('backend.penjualan.print', compact('data'));
+        return view('backend.pembelian.print', compact('data'));
     }
 
     public function delete($id)

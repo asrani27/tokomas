@@ -78,6 +78,34 @@ class LaporanController extends Controller
         return view('print.penjualan', compact('data'));
     }
 
+    public function bulanpenjualan()
+    {
+        $bulan = request('bulan');
+        $tahun = request('tahun');
+        $data = Penjualan::whereMonth('created_at', '=', $bulan)->whereYear('created_at', '=', $tahun)->get();
+        return view('print.penjualan', compact('data'));
+    }
+
+    public function tahunpenjualan()
+    {
+        $tahun = request('tahun');
+        $data = Penjualan::whereYear('created_at', '=', $tahun)->get();
+        return view('print.penjualan', compact('data'));
+    }
+    public function bulanpembelian()
+    {
+        $bulan = request('bulan');
+        $tahun = request('tahun');
+        $data = Pembelian::whereMonth('created_at', '=', $bulan)->whereYear('created_at', '=', $tahun)->get();
+        return view('print.pembelian', compact('data'));
+    }
+
+    public function tahunpembelian()
+    {
+        $tahun = request('tahun');
+        $data = Pembelian::whereYear('created_at', '=', $tahun)->get();
+        return view('print.pembelian', compact('data'));
+    }
     public function printpembelian()
     {
         $data = Pembelian::all();

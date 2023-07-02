@@ -45,10 +45,10 @@
       </div>
       <!-- /.col -->
       <div class="col-sm-4 invoice-col">
-        To
+        Supplier
         <address>
-            <strong>{{$data->kustomer->nama}}</strong><br>
-          Phone : {{$data->kustomer->telp}}
+            <strong>{{$data->supplier->nama}}</strong><br>
+          Phone : {{$data->supplier->telp}}
         </address>
       </div>
       <!-- /.col -->
@@ -77,7 +77,7 @@
           </tr>
           </thead>
           <tbody>
-              @foreach ($data->penjualan_detail as $item)
+              @foreach ($data->pembelian_detail as $item)
                 <tr>
                     <td>{{$item->barang->kode}}</td>
                     <td>{{$item->barang->nama}}</td>
@@ -106,7 +106,7 @@
           <table class="table">
             <tr>
               <th style="width:50%">Grand Total:</th>
-              <td>@currency($data->penjualan_detail->sum('subtotal'))</td>
+              <td>@currency($data->pembelian_detail->sum('subtotal'))</td>
             </tr>
           </table>
         </div>

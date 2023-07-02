@@ -53,7 +53,7 @@
                                 @endforeach
                             </td>
                             <td>
-                                <a href="/penjualan/print/{{$item->id}}" class="btn btn-xs bg-gradient-success" target="_blank"><i class="fas fa-print"></i></a>
+                                <a href="/penjualan/print/{{$item->id}}" class="btn btn-xs bg-gradient-success" target="_blank"><i class="fas fa-print"></i> Nota</a>
                             
                                 <a href="/penjualan/delete/{{$item->id}}" class="btn btn-xs bg-gradient-danger" onclick="return confirm('Yakin Menghapus Data Ini?');"><i class="fas fa-trash"></i></a>
                             </td>

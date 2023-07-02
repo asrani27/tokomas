@@ -14,18 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    if (Auth::check()) {
-        return redirect()->route('home');
-    }
-    return view('login');
-});
-
-Route::get('/logout', function () {
-    Auth::logout();
-    return redirect()->to('/');
-});
-
+Route::get('/logout', 'LoginController@logout');
+Route::get('/', 'LoginController@loginhome');
 Route::post('/login', 'LoginController@login');
 Route::get('/login', 'LoginController@loginhome')->name('login');
 Route::group(['middleware' => ['auth']], function () {
@@ -100,6 +90,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/pembelian/delete/{id}', 'PembelianController@delete');
     Route::post('/pembelian/add', 'PembelianController@save')->name('pembelian');
     Route::post('/pembelian/edit/{id}', 'PembelianController@update')->name('editpembelian');
+    Route::get('/pembelian/print/{id}', 'PembelianController@print');
 
     Route::get('/retur_penjualan', 'ReturPenjualanController@index');
     Route::get('/retur_penjualan/add', 'ReturPenjualanController@add');
@@ -124,6 +115,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/laporan/stok/print', 'LaporanController@printstok');
     Route::get('/laporan/penjualan/print', 'LaporanController@printpenjualan');
     Route::get('/laporan/pembelian/print', 'LaporanController@printpembelian');
+
+    Route::post('laporan/penjualan/bulan', 'LaporanController@bulanpenjualan');
+    Route::post('laporan/penjualan/tahun', 'LaporanController@tahunpenjualan');
+
+    Route::post('laporan/pembelian/bulan', 'LaporanController@bulanpembelian');
+    Route::post('laporan/pembelian/tahun', 'LaporanController@tahunpembelian');
     Route::get('/laporan/returpenjualan/print', 'LaporanController@printreturpenjualan');
     Route::get('/laporan/returpembelian/print', 'LaporanController@printreturpembelian');
     Route::get('/laporan/laba', 'LaporanController@laba');
